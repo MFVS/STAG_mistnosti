@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "stag-mistnosti"
+version = "0.1.0"
+description = ""
+authors = ["yoptohlejepeta <peta.kotlan@seznam.cz>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "stag_mistnosti"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+streamlit = "^1.28.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
