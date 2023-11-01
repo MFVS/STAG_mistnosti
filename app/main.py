@@ -26,8 +26,10 @@ df_mistnosti = pd.read_csv(StringIO(response.text), sep=";")
 # cisloMistnosti starts with 6. or 7.
 
 df_mistnosti = df_mistnosti[df_mistnosti["cisloMistnosti"].str.startswith(("6.", "7."))]
+# order by cisloMistnosti
+df_mistnosti.sort_values(by=["cisloMistnosti"], inplace=True)
 
-st.write(df_mistnosti)
+st.dataframe(df_mistnosti)
 
 st.header("Rozvrhy místností")
 
@@ -35,7 +37,6 @@ st.header("Rozvrhy místností")
 df_mistnosti = df_mistnosti[df_mistnosti["typ"].isin(["Učebna", "Laboratoř"])]
 
 url_rozvrh = "https://ws.ujep.cz/ws/services/rest2/rozvrhy/getRozvrhByMistnost"
-# semestr=%25&vsechnyCasyKonani=true&budova=CP&jenRozvrhoveAkce=false&vsechnyAkce=true&jenBudouciAkce=false&lang=cs&mistnost=6.13&outputFormat=CSV&rok=2023
 
 for mistnost in df_mistnosti["cisloMistnosti"]:
     st.subheader(mistnost, anchor=mistnost)
@@ -62,4 +63,4 @@ for mistnost in df_mistnosti["cisloMistnosti"]:
     response = httpx.get(url_rozvrh, params=vars_rozvrh)
     df_rozvrh = pd.read_csv(StringIO(response.text), sep=";")
     
-    st.write(df_rozvrh)
+    st.dataframe(df_rozvrh)
