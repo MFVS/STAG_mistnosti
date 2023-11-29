@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>STAG • Místnosti</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet"> 
+  <link rel="stylesheet" href="static/css/skeleton.css">
+  <link rel="stylesheet" href="static/css/normalize.css">
+
+</head>
+<body>
+
+  <div class="container">
+        <h1>Místnosti</h1>
+
+        {% for index, row in df_mistnosti.iterrows() %}
+          <div class="row">
+              <div class="six columns">
+                  <h5>{{ row['cisloMistnosti'] }}</h5>
+                  <p>{{ row['katedra'] }}</p>
+              </div>
+              <div class="six columns">
+                  <h5>Kapacita</h5>
+                  <p>{{ row['kapacita'] }}</p>
+              </div>
+          {% endfor %}
+  </div>
+
+</body>
+</html>
