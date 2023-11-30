@@ -26,9 +26,8 @@ def read_root(request: Request):
     response = requests.get(url_mistnosti_info, params=vars_mistnosti)
 
     df_mistnosti = pd.read_csv(StringIO(response.text), sep=";")
-    # cisloMistnosti starts with 6. or 7.
 
-    df_mistnosti = df_mistnosti[df_mistnosti["cisloMistnosti"].str.startswith(("6.", "7."))]
+    # df_mistnosti = df_mistnosti[df_mistnosti["cisloMistnosti"].str.startswith(("6.", "7."))]
     # order by cisloMistnosti
     df_mistnosti.sort_values(by=["cisloMistnosti"], inplace=True)
 
