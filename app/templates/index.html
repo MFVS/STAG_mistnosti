@@ -1,35 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>STAG • Místnosti</title>
   <meta name="description" content="">
   <meta name="author" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="static/css/skeleton.css">
-  <link rel="stylesheet" href="static/css/normalize.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/main.css">
+  <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+
+  <h1 class="title is-1 has-text-centered p-5">Místnosti</h1>
 
 </head>
-<body>
 
-  <div class="container">
-        <h1>Místnosti</h1>
+<body class="is-family-monospace">
 
-        {% for index, row in df_mistnosti.iterrows() %}
-          <div class="row">
-              <div class="six columns">
-                  <h5>{{ row['cisloMistnosti'] }}</h5>
-                  <p>{{ row['katedra'] }}</p>
-              </div>
-              <div class="six columns">
-                  <h5>Kapacita</h5>
-                  <p>{{ row['kapacita'] }}</p>
-              </div>
-          {% endfor %}
+
+  <div class="columns">
+    <div class="column">
+      <aside class="menu">
+        <p class="menu-label">
+          Číslo místnosti
+        </p>
+          <div class="select is-success">
+            <select>
+              <option selected disabled>Místnost</option>
+              {% for _, room_row in df_mistnosti.iterrows() %}
+                <option _="on click go to the top of #room_{{ _ }} -20px">{{ room_row['cisloMistnosti'] }}</option>
+              {% endfor %}
+            </select>
+          </div>
+      </aside>
+    </div>
+    <div class="column is-11">
+      <div class="container">
+
+        {% for outer_index, room_row in df_mistnosti.iterrows() %}
+        <div id="room_{{ outer_index }}" class="box p-5">
+          <h2 class="title is-3"><strong>{{ room_row['cisloMistnosti'] }}</strong></h2>
+          <small>{{ room_row['katedra'] }}</small>
+          <br>
+          <strong>Kapacita:</strong> {{ room_row['kapacita'] }}
+          <button class="button is-success is-pulled-right"
+            _="on click toggle @hidden on #rozvrh_{{ outer_index }}">Rozvrh</button>
+          <p id="rozvrh_{{ outer_index }}" hidden>
+            {% for inner_index, schedule_row in df_rozvrh.loc[df_rozvrh['mistnost'] ==
+            room_row['cisloMistnosti']|float].iterrows() %}
+            {{ schedule_row['nazev'] }}
+            <br>
+            {% endfor %}
+          </p>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
   </div>
 
 </body>
+
 </html>
