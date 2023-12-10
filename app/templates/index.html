@@ -24,7 +24,7 @@
         <p class="menu-label">
           Číslo místnosti
         </p>
-          <div class="select is-success">
+          <div class="select is-success is-rounded">
             <select>
               <option selected disabled>Místnost</option>
               {% for _, room_row in df_mistnosti.iterrows() %}
@@ -43,7 +43,7 @@
           <small>{{ room_row['katedra'] }}</small>
           <br>
           <strong>Kapacita:</strong> {{ room_row['kapacita'] }}
-          <button class="button is-success is-pulled-right"
+          <button class="button is-success is-rounded is-pulled-right is-family-monospace"
             _="on click toggle @hidden on #rozvrh_{{ outer_index }}">Rozvrh</button>
           <p id="rozvrh_{{ outer_index }}" hidden>
             {% for inner_index, schedule_row in df_rozvrh.loc[df_rozvrh['mistnost'] ==
