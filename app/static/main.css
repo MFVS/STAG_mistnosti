@@ -2,7 +2,7 @@ html {
     scroll-behavior: smooth;
   }
 
-.menu {
+.sidebar {
     position: sticky;
     display: inline-block;
     vertical-align: top;

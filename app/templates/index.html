@@ -9,7 +9,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" type="text/css" href="/static/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+
+  <script type="text/hyperscript">
+    def toggle_hidden(id)
+        toggle @hidden on id
+      end
+
+    def show_sidebar()
+      if #sidebar match .is-hidden
+        add .is-10 to #content 
+        toggle .is-hidden on #sidebar
+        add .animate__slideInLeft to #sidebar
+        remove .mdi-arrow-right-thick from #sidebar_button
+        add .mdi-arrow-left-thick to #sidebar_button
+      else
+        remove .animate__slideInLeft from #sidebar
+        add .animate__slideOutLeft to #sidebar
+        then wait 0.5s
+        toggle .is-hidden on #sidebar
+        remove .animate__slideOutLeft from #sidebar
+        remove .is-10 from #content
+        remove .mdi-arrow-left-thick from #sidebar_button
+        add .mdi-arrow-right-thick to #sidebar_button
+      end
+    end
+  </script>
 
   <h1 class="title is-1 has-text-centered p-5">Místnosti</h1>
 
@@ -17,25 +44,39 @@
 
 <body class="is-family-monospace">
 
+  <a class="icon is-large has-text-success" _="on click show_sidebar()">
+    <span id="sidebar_button" class="mdi mdi-48px mdi-arrow-right-thick"></span>
+  </a>
 
   <div class="columns">
-    <div class="column">
+    <div id="sidebar" class="column sidebar is-hidden animate__animated animate__faster">
       <aside class="menu">
         <p class="menu-label">
           Číslo místnosti
         </p>
-          <div class="select is-success is-rounded">
-            <select>
-              <option selected disabled>Místnost</option>
-              {% for _, room_row in df_mistnosti.iterrows() %}
-                <option _="on click go to the top of #room_{{ _ }} -20px">{{ room_row['cisloMistnosti'] }}</option>
-              {% endfor %}
-            </select>
-          </div>
+        <div class="select is-success is-rounded">
+          <select>
+            <option selected>–</option>
+            {% for _, room_row in df_mistnosti.iterrows() %}
+            <option _="on click go to the top of #room_{{ _ }} -20px">{{ room_row['cisloMistnosti'] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <p class="menu-label">
+          Katedra
+        </p>
+        <div class="select is-success is-rounded">
+          <select>
+            <option selected>–</option>
+            {% for katedra in df_mistnosti['katedra'].unique() %}
+            <option _="on click go to the top of #room_{{ _ }} -20px">{{ katedra }}</option>
+            {% endfor %}
+          </select>
+        </div>
       </aside>
     </div>
-    <div class="column is-11">
-      <div class="container">
+    <div id="content" class="column">
+      <div class="container is-fluid">
 
         {% for outer_index, room_row in df_mistnosti.iterrows() %}
         <div id="room_{{ outer_index }}" class="box p-5">
@@ -43,14 +84,33 @@
           <small>{{ room_row['katedra'] }}</small>
           <br>
           <strong>Kapacita:</strong> {{ room_row['kapacita'] }}
-          <button class="button is-success is-rounded is-pulled-right is-family-monospace"
-            _="on click toggle @hidden on #rozvrh_{{ outer_index }}">Rozvrh</button>
-          <p id="rozvrh_{{ outer_index }}" hidden>
-            {% for inner_index, schedule_row in df_rozvrh.loc[df_rozvrh['mistnost'] ==
-            room_row['cisloMistnosti']|float].iterrows() %}
-            {{ schedule_row['nazev'] }}
-            <br>
-            {% endfor %}
+          <a class="icon is-large has-text-success is-pulled-right"
+            _="on click toggle_hidden(#rozvrh_{{ outer_index }})">
+            <!-- _="on click toggle @hidden on #rozvrh_{{ outer_index }}"> -->
+            <span class="mdi mdi-36px mdi-table"></span></a>
+          <table id="rozvrh_{{ outer_index }}" class="table is-hoverable mx-auto" hidden>
+            <thead>
+              <tr>
+                <th>Předmět</th>
+                <th>Plán obsazení</th>
+                <th>Obsazení</th>
+                <th>Od</th>
+                <th>Do</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for inner_index, schedule_row in df_rozvrh.loc[df_rozvrh['mistnost'] ==
+              room_row['cisloMistnosti']|float].iterrows() %}
+              <tr>
+                <td>{{ schedule_row['nazev'] }}</td>
+                <td>{{ schedule_row['planObsazeni'] }}</td>
+                <td>{{ schedule_row['obsazeni'] }}</td>
+                <td>{{ schedule_row['hodinaOd'] }}</td>
+                <td>{{ schedule_row['hodinaDo'] }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
           </p>
         </div>
         {% endfor %}
