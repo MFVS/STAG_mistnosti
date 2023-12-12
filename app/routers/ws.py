@@ -31,7 +31,7 @@ def get_schedule(room_id: float, request: Request):
     df = pd.read_csv(StringIO(response.text), sep=";")
     
     df["obsazeni"] = df["obsazeni"].apply(lambda x: int(x) if not pd.isna(x) else "—")
-    df["planObsazeni"] = df["planObsazeni"].apply(lambda x: int(x) if not pd.isna(x) else "—"   )
+    df["planObsazeni"] = df["planObsazeni"].apply(lambda x: int(x) if not pd.isna(x) else "—")
     
     # print(df.head())
     

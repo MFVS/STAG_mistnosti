@@ -35,15 +35,15 @@
     end
   </script>
 
-  <section class="hero is-light">
+  <section class="hero is-light" style="background-image: url('/static/images/wave-haikei.svg');  background-repeat: no-repeat; background-size: 100%;">
     <div class="hero-body">
         <p class="title is-1 has-text-centered">
           Místnosti
         </p>
-        <a class="icon is-large has-text-success" _="on click show_sidebar()">
+        <a class="icon is-large has-text-success"
+           _="on click show_sidebar()">
           <span id="sidebar_button" class="mdi mdi-48px mdi-arrow-expand-right"></span>
         </a>
-      
     </div>
   </section>
 
@@ -88,10 +88,11 @@
             <strong>Typ:</strong> {{ room_row['typ'] }}
             <br>
             <strong>Kapacita:</strong> {{ room_row['kapacita'] }}
-            <a class="icon is-large has-text-success is-pulled-right"
-              hx-get="/ws/schedule/{{ room_row['cisloMistnosti'] }}"
-              hx-swap="afterend" hx-trigger="click">
-              <span class="mdi mdi-36px mdi-table"></span></a>
+            <button class="button is-pulled-right is-success" 
+              hx-get="/ws/schedule/{{ room_row['cisloMistnosti'] }}" hx-swap="afterend">
+              <span class="mdi mdi-36px mdi-table"></span>
+            </a>
+            </button>
           </div>
         </div>
         {% endfor %}
