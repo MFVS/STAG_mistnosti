@@ -10,21 +10,18 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" type="text/css" href="/static/main.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.9"></script>
 
   <script type="text/hyperscript">
-    def toggle_hidden(id)
-        toggle @hidden on id
-      end
-
     def show_sidebar()
       if #sidebar match .is-hidden
         add .is-10 to #content 
         toggle .is-hidden on #sidebar
         add .animate__slideInLeft to #sidebar
-        remove .mdi-arrow-right-thick from #sidebar_button
-        add .mdi-arrow-left-thick to #sidebar_button
+        remove .mdi-arrow-expand-right from #sidebar_button
+        add .mdi-arrow-collapse-left to #sidebar_button
       else
         remove .animate__slideInLeft from #sidebar
         add .animate__slideOutLeft to #sidebar
@@ -32,31 +29,36 @@
         toggle .is-hidden on #sidebar
         remove .animate__slideOutLeft from #sidebar
         remove .is-10 from #content
-        remove .mdi-arrow-left-thick from #sidebar_button
-        add .mdi-arrow-right-thick to #sidebar_button
+        remove .mdi-arrow-collapse-left from #sidebar_button
+        add .mdi-arrow-expand-right to #sidebar_button
       end
     end
   </script>
 
-  <h1 class="title is-1 has-text-centered p-5">Místnosti</h1>
+  <section class="hero is-light">
+    <div class="hero-body">
+        <p class="title is-1 has-text-centered">
+          Místnosti
+        </p>
+        <a class="icon is-large has-text-success" _="on click show_sidebar()">
+          <span id="sidebar_button" class="mdi mdi-48px mdi-arrow-expand-right"></span>
+        </a>
+      
+    </div>
+  </section>
 
 </head>
 
-<body class="is-family-monospace">
-
-  <a class="icon is-large has-text-success" _="on click show_sidebar()">
-    <span id="sidebar_button" class="mdi mdi-48px mdi-arrow-right-thick"></span>
-  </a>
-
-  <div class="columns">
+<body class="is-family-monospace has-background-light">
+  <div class="columns p-5">
     <div id="sidebar" class="column sidebar is-hidden animate__animated animate__faster">
-      <aside class="menu">
+      <aside class="menu has-text-centered">
         <p class="menu-label">
           Číslo místnosti
         </p>
         <div class="select is-success is-rounded">
           <select>
-            <option selected>–</option>
+            <option selected></option>
             {% for _, room_row in df_mistnosti.iterrows() %}
             <option _="on click go to the top of #room_{{ _ }} -20px">{{ room_row['cisloMistnosti'] }}</option>
             {% endfor %}
@@ -67,55 +69,34 @@
         </p>
         <div class="select is-success is-rounded">
           <select>
-            <option selected>–</option>
+            <option _="on click show <div/> in #content" selected>–</option>
             {% for katedra in df_mistnosti['katedra'].unique() %}
-            <option _="on click go to the top of #room_{{ _ }} -20px">{{ katedra }}</option>
+            <option _="on click show <div/> in #content when its innerHTML contains my value">{{ katedra }}</option>
             {% endfor %}
           </select>
         </div>
       </aside>
     </div>
-    <div id="content" class="column">
-      <div class="container is-fluid">
-
+    <div id="content" class="column container is-fluid">
+      <div class="columns is-multiline is-centered">
         {% for outer_index, room_row in df_mistnosti.iterrows() %}
-        <div id="room_{{ outer_index }}" class="box p-5">
-          <h2 class="title is-3"><strong>{{ room_row['cisloMistnosti'] }}</strong></h2>
-          <small>{{ room_row['katedra'] }}</small>
-          <br>
-          <strong>Kapacita:</strong> {{ room_row['kapacita'] }}
-          <a class="icon is-large has-text-success is-pulled-right"
-            _="on click toggle_hidden(#rozvrh_{{ outer_index }})">
-            <!-- _="on click toggle @hidden on #rozvrh_{{ outer_index }}"> -->
-            <span class="mdi mdi-36px mdi-table"></span></a>
-          <table id="rozvrh_{{ outer_index }}" class="table is-hoverable mx-auto" hidden>
-            <thead>
-              <tr>
-                <th>Předmět</th>
-                <th>Plán obsazení</th>
-                <th>Obsazení</th>
-                <th>Od</th>
-                <th>Do</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for inner_index, schedule_row in df_rozvrh.loc[df_rozvrh['mistnost'] ==
-              room_row['cisloMistnosti']|float].iterrows() %}
-              <tr>
-                <td>{{ schedule_row['nazev'] }}</td>
-                <td>{{ schedule_row['planObsazeni'] }}</td>
-                <td>{{ schedule_row['obsazeni'] }}</td>
-                <td>{{ schedule_row['hodinaOd'] }}</td>
-                <td>{{ schedule_row['hodinaDo'] }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          </p>
+        <div id="room_{{ outer_index }}" class="column is-4">
+          <div class="box p-5">
+            <h2 class="title is-3"><strong>{{ room_row['cisloMistnosti'] }}</strong></h2>
+            <small>{{ room_row['katedra'] }}</small>
+            <br>
+            <strong>Typ:</strong> {{ room_row['typ'] }}
+            <br>
+            <strong>Kapacita:</strong> {{ room_row['kapacita'] }}
+            <a class="icon is-large has-text-success is-pulled-right"
+              hx-get="/ws/schedule/{{ room_row['cisloMistnosti'] }}"
+              hx-swap="afterend" hx-trigger="click">
+              <span class="mdi mdi-36px mdi-table"></span></a>
+          </div>
         </div>
         {% endfor %}
-
       </div>
+
     </div>
   </div>
 

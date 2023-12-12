@@ -1,0 +1,34 @@
+<div id="modal" class="modal is-active">
+    <div class="modal-background" _="on click remove #modal"></div>
+    <div class="modal-content animate__animated animate__zoomIn animate__faster" style="width: 50%;">
+        <div class="container">
+        <div class="box has-background-light">
+            <table id="rozvrh_{{ outer_index }}" class="table is-hoverable mx-auto has-background-light">
+                <thead>
+                  <tr>
+                    <th>Předmět</th>
+                    <th>Plán obsazení</th>
+                    <th>Obsazení</th>
+                    <th>Od</th>
+                    <th>Do</th>
+                  </tr>
+                </thead>
+                <tbody id="table_{{ outer_index }}">
+                    {% for inner_index, schedule_row in df_rozvrh.iterrows() %}
+                    <tr>
+                        <td>{{ schedule_row['nazev'] }}</td>
+                        <td>{{ schedule_row['planObsazeni'] }}</td>
+                        <td>{{ schedule_row['obsazeni'] }}</td>
+                        <td>{{ schedule_row['hodinaOd'] }}</td>
+                        <td>{{ schedule_row['hodinaDo'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+        </div>
+        </div>
+
+    </div>
+
+
+</div>

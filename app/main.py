@@ -5,6 +5,8 @@ from io import StringIO
 import pandas as pd
 import requests
 
+from .routers import ws
+
 
 app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
@@ -33,36 +35,8 @@ def read_root(request: Request):
 
     # df_mistnosti["typ"] is Učebna or Laboratoř
     df_mistnosti = df_mistnosti[df_mistnosti["typ"].isin(["Učebna", "Laboratoř"])]
-
-    print(df_mistnosti.columns)
-    url_rozvrh = "https://ws.ujep.cz/ws/services/rest2/rozvrhy/getRozvrhByMistnost"
-
-    temp_df = []
     
-    df_mistnosti = df_mistnosti[df_mistnosti["cisloMistnosti"].isin(["-1.17", "6.14"])]
+    return templates.TemplateResponse("index.html", {"request": request, "df_mistnosti": df_mistnosti,}) # "df_rozvrh": df_rozvrh
 
-    for mistnost in df_mistnosti["cisloMistnosti"]:
 
-        vars_rozvrh = {
-            "semestr": "%",
-            "mistnost": mistnost,
-            "vsechnyCasyKonani": "true",
-            "budova": "CP",
-            "jenRozvrhoveAkce": "false",
-            "vsechnyAkce": "true",
-            "jenBudouciAkce": "false",
-            "rok": "2023",
-            "lang": "cs",
-            "outputFormatEncoding": "utf-8",
-            "outputFormat": "CSV",
-        }
-        
-        response = requests.get(url_rozvrh, params=vars_rozvrh)
-        temp_df.append(pd.read_csv(StringIO(response.text), sep=";"))
-        
-    df_rozvrh = pd.concat(temp_df, ignore_index=True)
-    # print(df_rozvrh.columns)
-    # print(df_rozvrh.mistnost.unique())
-    print(df_rozvrh.columns)
-    
-    return templates.TemplateResponse("index.html", {"request": request, "df_mistnosti": df_mistnosti, "df_rozvrh": df_rozvrh})
+app.include_router(ws.router)
