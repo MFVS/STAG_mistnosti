@@ -64,17 +64,33 @@
             {% endfor %}
           </select>
         </div>
-        <p class="menu-label">
-          Katedra
+
+        <form class="pt-5">
+          <input type="hidden" name="df" value="{{ df_str }}">
+          <p class="menu-label">
+            Katedra
+          </p>
+          <div class="field">
+            <div class="select is-success is-rounded">
+              <select id="katedra">
+                <option _="on click show <div/> in #content" selected>–</option>
+                {% for katedra in df_mistnosti['katedra'].unique() %}
+                <option _="on click show <div/> in #content when its innerHTML contains my value">{{ katedra }}</option>
+                {% endfor %}
+              </select>
+            </div> 
+        </form>
+        <!-- <p class="menu-label">
+          Podlaží
         </p>
         <div class="select is-success is-rounded">
           <select>
             <option _="on click show <div/> in #content" selected>–</option>
-            {% for katedra in df_mistnosti['katedra'].unique() %}
+            {% for katedra in df_mistnosti['podlazi'].unique() %}
             <option _="on click show <div/> in #content when its innerHTML contains my value">{{ katedra }}</option>
             {% endfor %}
           </select>
-        </div>
+        </div> -->
       </aside>
     </div>
     <div id="content" class="column container is-fluid">

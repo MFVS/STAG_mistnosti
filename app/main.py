@@ -36,6 +36,8 @@ def read_root(request: Request):
     # df_mistnosti["typ"] is Učebna or Laboratoř
     df_mistnosti = df_mistnosti[df_mistnosti["typ"].isin(["Učebna", "Laboratoř"])]
     
+    print(df_mistnosti.columns)
+    
     return templates.TemplateResponse("index.html", {"request": request, "df_mistnosti": df_mistnosti,}) # "df_rozvrh": df_rozvrh
 
 

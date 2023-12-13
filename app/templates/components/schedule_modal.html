@@ -7,7 +7,6 @@
                 <thead>
                   <tr>
                     <th>Předmět</th>
-                    <th>Plán obsazení</th>
                     <th>Obsazení</th>
                     <th>Od</th>
                     <th>Do</th>
@@ -17,10 +16,9 @@
                     {% for inner_index, schedule_row in df_rozvrh.iterrows() %}
                     <tr>
                         <td>{{ schedule_row['nazev'] }}</td>
-                        <td>{{ schedule_row['planObsazeni'] }}</td>
                         <td>{{ schedule_row['obsazeni'] }}</td>
-                        <td>{{ schedule_row['hodinaOd'] }}</td>
-                        <td>{{ schedule_row['hodinaDo'] }}</td>
+                        <td>{{ schedule_row['hodinaSkutOd'] }}</td>
+                        <td>{{ schedule_row['hodinaSkutDo'] }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

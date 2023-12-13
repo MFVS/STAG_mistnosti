@@ -33,6 +33,6 @@ def get_schedule(room_id: float, request: Request):
     df["obsazeni"] = df["obsazeni"].apply(lambda x: int(x) if not pd.isna(x) else "—")
     df["planObsazeni"] = df["planObsazeni"].apply(lambda x: int(x) if not pd.isna(x) else "—")
     
-    # print(df.head())
+    print(df.columns)
     
     return templates.TemplateResponse("components/schedule_modal.html", {"request": request, "df_rozvrh": df})
