@@ -34,22 +34,25 @@
       end
     end
   </script>
-
-  <section class="hero is-light" style="background-image: url('/static/images/wave-haikei.svg');  background-repeat: no-repeat; background-size: 100%;">
-    <div class="hero-body">
-        <p class="title is-1 has-text-centered">
-          Místnosti
-        </p>
-        <a class="icon is-large has-text-success"
-           _="on click show_sidebar()">
-          <span id="sidebar_button" class="mdi mdi-48px mdi-arrow-expand-right"></span>
-        </a>
-    </div>
-  </section>
+  
+  <nav class="navbar is-success is-fixed-top">
+    <a class="icon is-large has-text-black m-5"
+      _="on click show_sidebar()">
+    <span id="sidebar_button" class="mdi mdi-48px mdi-arrow-expand-right"></span>
+  </a>
+  <h1 class="title is-1 has-text-centered m-5">STAG Místnosti</h1>
+  </nav>
 
 </head>
 
 <body class="is-family-monospace has-background-light">
+  <section class="hero is-light" style="background-image: url('/static/images/wave-haikei.svg');  background-repeat: no-repeat; background-size: 100%; padding-bottom: 100px;">
+    <div class="hero-body">
+        <p class="title is-1 has-text-centered">
+          Místnosti
+        </p>
+    </div>
+  </section>
   <div class="columns p-5">
     <div id="sidebar" class="column sidebar is-hidden animate__animated animate__faster">
       <aside class="menu has-text-centered">
